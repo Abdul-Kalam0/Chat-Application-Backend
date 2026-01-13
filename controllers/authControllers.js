@@ -4,6 +4,7 @@ import UserModel from "../models/User.js";
 export const register = async (req, res) => {
   try {
     let { username, password } = req.body;
+
     // 3️⃣ Validate input
     if (!username || !password) {
       return res.status(400).json({
@@ -14,6 +15,7 @@ export const register = async (req, res) => {
 
     // 2️⃣ Normalize input
     username = username.trim().toLowerCase();
+    password = password.trim();
 
     // 3️⃣ Strong password rule
     if (password.length < 8) {
@@ -31,7 +33,7 @@ export const register = async (req, res) => {
       });
     }
     // 5️⃣ Hash password
-    const passwordHash = await bcrypt.hash(password, 12);
+    const passwordHash = await bcrypt.hash(password, 10);
 
     // 6️⃣ Create user
     const user = new UserModel({
@@ -51,6 +53,8 @@ export const register = async (req, res) => {
       },
     });
   } catch (error) {
+    console.error("Register Error: ", error.message);
+
     return res.status(500).json({
       success: false,
       message: "Something went wrong. Please try again later.",
@@ -98,7 +102,7 @@ export const login = async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({
-      success: true,
+      success: false,
       message: "Something went wrong. Please try later.",
     });
   }

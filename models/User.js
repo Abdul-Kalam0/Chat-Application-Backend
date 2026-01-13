@@ -8,7 +8,11 @@ const userSchema = new mongoose.Schema({
     unique: true,
   },
 
-  password: { type: Number, required: true, unique: true, select: false },
+  password: {
+    type: String,
+    required: true,
+    select: false,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
