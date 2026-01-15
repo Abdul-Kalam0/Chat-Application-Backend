@@ -47,17 +47,18 @@ io.on("connection", (socket) => {
 });
 
 app.get("/users", async (req, res) => {
-  const { currentUser } = req.query;
+  // const { currentUser } = req.query;
   try {
-    if (!currentUser) {
-      return res.status(400).json({
-        success: false,
-        message: "currentUser is required.",
-      });
-    }
-    const users = await UserModel.find({
-      username: { $ne: currentUser.toLowerCase() },
-    }).select("_id username createdAt");
+    // if (!currentUser) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: "currentUser is required.",
+    //   });
+    // }
+    // {
+    //   username: { $ne: currentUser.toLowerCase() },
+    // }).select("_id username createdAt"
+    const users = await UserModel.find();
 
     if (users.length === 0) {
       return res.status(404).json({
