@@ -117,68 +117,68 @@ export const login = async (req, res) => {
   }
 };
 
-export const getUsers = async (req, res) => {
-  const { currentUser } = req.query;
-  try {
-    if (!currentUser) {
-      return res.status(400).json({
-        success: false,
-        message: "currentUser is required.",
-      });
-    }
-    const users = await UserModel.find({
-      username: { $ne: currentUser.toLowerCase() },
-    }).select("_id username createdAt");
+// export const getUsers = async (req, res) => {
+//   const { currentUser } = req.query;
+//   try {
+//     if (!currentUser) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "currentUser is required.",
+//       });
+//     }
+//     const users = await UserModel.find({
+//       username: { $ne: currentUser.toLowerCase() },
+//     }).select("_id username createdAt");
 
-    if (users.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "User not available",
-      });
-    }
+//     if (users.length === 0) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "User not available",
+//       });
+//     }
 
-    return res.status(200).json({
-      success: true,
-      message: "Users fetched successfully",
-      users,
-    });
-  } catch (error) {
-    console.error("Users Error: ", error.message);
-    return res.status(500).json({
-      success: false,
-      message: "Something went wrong. Please try again later.",
-      error: error.message,
-    });
-  }
-};
+//     return res.status(200).json({
+//       success: true,
+//       message: "Users fetched successfully",
+//       users,
+//     });
+//   } catch (error) {
+//     console.error("Users Error: ", error.message);
+//     return res.status(500).json({
+//       success: false,
+//       message: "Something went wrong. Please try again later.",
+//       error: error.message,
+//     });
+//   }
+// };
 
-export const getMessages = async (req, res) => {
-  const { sender, receiver } = req.query;
-  try {
-    if (!sender || !receiver) {
-      return res.status(400).json({
-        success: false,
-        message: "sender and receiver is required",
-      });
-    }
-    const messages = await MessageModel.find({
-      $or: [
-        { sender, receiver },
-        { sender: receiver, receiver: sender },
-      ],
-    }).sort({ createdAt: 1 });
+// export const getMessages = async (req, res) => {
+//   const { sender, receiver } = req.query;
+//   try {
+//     if (!sender || !receiver) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "sender and receiver is required",
+//       });
+//     }
+//     const messages = await MessageModel.find({
+//       $or: [
+//         { sender, receiver },
+//         { sender: receiver, receiver: sender },
+//       ],
+//     }).sort({ createdAt: 1 });
 
-    return res.status(200).json({
-      success: true,
-      messages,
-    });
-  } catch (error) {
-    console.error("Message Error: ", error.message);
+//     return res.status(200).json({
+//       success: true,
+//       messages,
+//     });
+//   } catch (error) {
+//     console.error("Message Error: ", error.message);
 
-    return res.status(500).json({
-      success: false,
-      message: "Something went wrong. Please try again later.",
-      error: error.message,
-    });
-  }
-};
+//     return res.status(500).json({
+//       success: false,
+//       message: "Something went wrong. Please try again later.",
+//       error: error.message,
+//     });
+//   }
+// };
