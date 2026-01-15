@@ -7,7 +7,6 @@ import { Server } from "socket.io";
 import http from "http";
 import authRoutes from "./routes/authRoutes.js";
 import MessageModel from "./models/Message.js";
-import UserModel from "./models/User.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -44,8 +43,8 @@ io.on("connection", (socket) => {
   });
 });
 
-app.use("/users", authRoutes);
+app.use("/", authRoutes);
 
-app.use("/messages", authRoutes);
+app.use("/", authRoutes);
 
 export default server;
