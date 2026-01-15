@@ -9,7 +9,7 @@ async function start() {
   try {
     await dbInitialization();
     server.listen(PORT, () => {
-      console.log("🚀Server is listening on PORT 3000.");
+      console.log(`🚀 Server running on port ${PORT}`);
     });
   } catch (error) {
     console.error("❌Error is starting server.", error);
