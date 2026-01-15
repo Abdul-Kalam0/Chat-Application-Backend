@@ -35,9 +35,9 @@ io.on("connection", (socket) => {
       message,
     });
     await newMessage.save();
-  });
 
-  socket.broadcast.emit("receive_message", data);
+    socket.broadcast.emit("receive_message", data);
+  });
 
   socket.on("disconnect", () => {
     console.log("User disconnected", socket.id);
