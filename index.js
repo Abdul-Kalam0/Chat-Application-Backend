@@ -10,7 +10,8 @@ import UserModel from "./models/User.js";
 import MessageModel from "./models/Message.js";
 import authMiddleware from "./middleware/auth.js";
 
-const CLIENT = "https://chat-application-001.vercel.app";
+// const CLIENT = "https://chat-application-001.vercel.app";
+const CLIENT = "http://localhost:3000";
 
 const app = express();
 app.use(
