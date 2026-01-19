@@ -11,7 +11,7 @@ import MessageModel from "./models/Message.js";
 import authMiddleware from "./middleware/auth.js";
 
 const CLIENT = "https://chat-application-backend-7lg7.onrender.com";
-//const CLIENT = "http://localhost:3000";
+// const CLIENT = "http://localhost:3000";
 
 const app = express();
 
