@@ -10,15 +10,18 @@ import UserModel from "./models/User.js";
 import MessageModel from "./models/Message.js";
 
 const CLIENT = "https://chat-application-001.vercel.app";
-// const CLIENT = "http://localhost:3000"; // change to vercel later
+// const CLIENT = "http://localhost:3000";
 
 const app = express();
 app.use(cors({ origin: CLIENT }));
 app.use(express.json());
 
 const server = http.createServer(app);
+
+// 🔒 FORCE WEBSOCKET (critical)
 const io = new Server(server, {
   cors: { origin: CLIENT },
+  transports: ["websocket"],
 });
 
 // -------- ROUTES --------
@@ -28,25 +31,34 @@ app.use("/auth", authRoutes);
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
-  // 🔑 join personal room
+  // ✅ join personal room (reliable)
   socket.on("join", (username) => {
+    if (!username) return;
     socket.join(username);
-    console.log(`${username} joined their room`);
+    console.log(`${username} joined room`);
   });
 
-  // 🔒 PRIVATE MESSAGE
-  socket.on("send_message", async ({ sender, receiver, message }) => {
-    if (!sender || !receiver || !message) return;
+  // ✅ PRIVATE 1-to-1 MESSAGE
+  socket.on("send_message", async (data, ack) => {
+    try {
+      const { sender, receiver, message } = data;
+      if (!sender || !receiver || !message) return;
 
-    const savedMessage = await MessageModel.create({
-      sender,
-      receiver,
-      message,
-    });
+      const savedMessage = await MessageModel.create({
+        sender,
+        receiver,
+        message,
+      });
 
-    // send ONLY to sender & receiver
-    io.to(sender).emit("receive_message", savedMessage);
-    io.to(receiver).emit("receive_message", savedMessage);
+      // 🔒 SEND ONLY TO BOTH USERS
+      io.to(sender).emit("receive_message", savedMessage);
+      io.to(receiver).emit("receive_message", savedMessage);
+
+      ack?.({ success: true });
+    } catch (err) {
+      console.error(err);
+      ack?.({ success: false });
+    }
   });
 
   socket.on("disconnect", () => {
@@ -60,6 +72,7 @@ app.get("/users", async (req, res) => {
   const users = await UserModel.find({
     username: { $ne: currentUser },
   }).select("_id username");
+
   res.json(users);
 });
 
